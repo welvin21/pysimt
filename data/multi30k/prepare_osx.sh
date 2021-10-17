@@ -14,7 +14,7 @@ for tlang in de fr cs; do
     for llang in en ${tlang}; do
       inp="raw/${sp}.${llang}.gz"
       if [ -f $inp ]; then
-        zcat $inp | lowercase.perl -l ${llang} | normalize-punctuation.perl -l ${llang} | \
+        gunzip -c $inp | lowercase.perl -l ${llang} | normalize-punctuation.perl -l ${llang} | \
           tokenizer.perl -l ${llang} -a -threads 4 > $folder/${sp}.${SUFF}.${llang}
       fi
     done
@@ -23,7 +23,7 @@ for tlang in de fr cs; do
 
     # De-hyphenize test set targets for proper evaluation afterwards
     if [[ "$sp" =~ ^test.* ]] && [[ -f "${folder}/${trg}" ]]; then
-      sed -r 's/\s*@-@\s*/-/g' < ${folder}/${trg} > ${folder}/${trg}.dehyph
+      sed -E 's/\s*@-@\s*/-/g' < ${folder}/${trg} > ${folder}/${trg}.dehyph
     fi
   done
   # Create vocabularies
