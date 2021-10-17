@@ -4,7 +4,10 @@ import setuptools
 
 def get_pysimt_version():
     with open('pysimt/__init__.py') as f:
-        s = f.read().split('\n')[0]
+        t = f.read().split('\n')
+        for s in t:
+            if('__version__' in s):
+                break
         if '__version__' not in s:
             raise RuntimeError('Can not detect version from pysimt/__init__.py')
         return eval(s.split(' ')[-1])
